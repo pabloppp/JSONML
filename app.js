@@ -13,6 +13,7 @@ window.addEventListener("load", function(){
 
 	//options
 	var fullscreenToggle = document.getElementById("fullscreenToggle");
+	var saveHTML = document.getElementById("saveHTML"); 
 
 	textarea.addEventListener("keyup", function(event){
 		var cursorLine = textarea.value.substr(0, textarea.selectionStart).split("\n").length;
@@ -148,8 +149,23 @@ window.addEventListener("load", function(){
     	};
 	}
 
+	var htmlExport = function(){
+		var html = '<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<meta charset="UTF-8">\n\t\t<title>'+document.title+'</title>\n\t</head>\n<body>\n';
+		html += result.innerHTML;
+		html += "\n</body>\n</html>";
+		var a = document.createElement("a");
+	    var file = new Blob([html], {type: "html"});
+	    a.href = URL.createObjectURL(file);
+	    a.download = document.title+".html";
+	    a.click();
+	}
+
 	fullscreenToggle.addEventListener("click", function(event){
 		container.classList.toggle("full");
+	});
+
+	saveHTML.addEventListener("click", function(event){
+		htmlExport();
 	});
 
 });
