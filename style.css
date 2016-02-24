@@ -190,3 +190,52 @@ header.main > h1{
 .options button:hover{
 	background-color: rgba(255,255,255,0.2);
 }
+
+.option-menu{
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 999;
+}
+
+.option-menu .open-button{
+	color: white;
+	line-height: 35px;
+	font-size: 1.2em;
+	margin-right: 10px;
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+.option-menu .option-list{
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	list-style: none;
+	background-color: rgba(0,0,0,0.7);
+	color: white;
+	padding: 10px;
+	margin: 0;
+	border-radius: 3px;
+	pointer-events: none;
+	transition: all 0.3s;
+	opacity: 0;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+	border: 1px solid rgba(255,255,255,0.2);
+}
+
+.option-menu:hover .option-list, .option-menu .option-list:hover{
+	opacity: 1;
+	pointer-events: all;
+}
+
+.option-menu .option-list li{
+	padding: 5px 10px;
+	border-radius: 2px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.option-menu .option-list li:hover{
+	background-color: rgba(255,255,255,0.1);
+}

@@ -1,0 +1,64 @@
+"div":{
+
+	//you can write comments like this
+	
+	//add elements writing the tag name followed by the content
+
+	"h1": "this is a sample project",
+	"h2": "I'll try to explain all you need to know...",
+
+	"hr":{},
+
+	//now let's try something harder
+
+	"span":{
+		//you can nest elements inside other elements like this!
+		"span":"nested span"
+	},
+
+	//if you need to add more than just the element content do it like this
+	"div":{
+		"content": "div's content",
+		"something else": {}
+	},
+
+	//you can add styles and classes to your elements!
+	"div":{
+		"content": "stilized div",
+		"style":{
+			"color": "red",
+			"background-color": "blue"
+		},
+		"class": ["foo", "bar"] //add more than one!
+	},
+
+	//there's also a name syntax for tags, because json does not allow to have the same tag twice...
+	"p": "this tag will be replaced",
+	"p": "this tag will repace the tag above",
+	"p#new": "this tag will not replace or be replaced! And it will have the id 'new'... cool isn't it?'",
+
+	//you can also add classes with name syntax, just like this
+	"div#classified.one.two":"This div has the casses 'one' and 'two'",
+	
+	//the last thing (for now) is the possibility to add other attributes like type, href, value, etc...
+
+	"input#notype":{}, //this input has no type
+	
+	//but this one has type date!!!
+	"input#date":{
+		"attr":{
+			"type":"date"
+		}
+	},
+	"br":{},
+	//some shortcuts:
+	"a":{
+		"content":"simple link",
+		"href": "http:\/\/google.com"
+	},
+	"img":{
+		"src": "http:\/\/mardaloopdoggiedaycare.com/wp-content/uploads/2014/12/cute-dog2.jpg",
+		"style": "width: 50%; display:block"
+	}	
+
+}

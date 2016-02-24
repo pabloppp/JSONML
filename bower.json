@@ -1,0 +1,21 @@
+{
+  "name": "jsonml-maker",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "Pablo Pernias <pablo@pernias.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/pabloppp/JSONML",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "FileSaver": "*"
+  }
+}

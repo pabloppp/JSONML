@@ -25,21 +25,21 @@ window.addEventListener("load", function(){
 		for(var i in lines){
 			var line = lines[i];
 			var line_trimmed = line.trim();
-			var commentStarts = line.indexOf("//");
+			var commentStarts = line_trimmed.indexOf("//");
 			if(commentStarts >= 0){
 				line_trimmed = line_trimmed.substring(0, commentStarts);
 			}
 
 			if(line_trimmed.length > 0){
 				if(line.indexOf(":") > 0){
-					var key = line.slice(0, line.indexOf(":")).trim();
-					var indent = line.slice(0, line.indexOf(key));
-					if(key[0] != '\"') line = indent+'"'+line.slice(line.indexOf(key));
-					if(key[key.length-1] != '\"') line = line.slice(0, line.indexOf(":"))+'"'+line.slice(line.indexOf(":"));
-					lines[i] = line;
+					var key = line_trimmed.slice(0, line_trimmed.indexOf(":")).trim();
+					var indent = line_trimmed.slice(0, line_trimmed.indexOf(key));
+					if(key[0] != '\"') line_trimmed = indent+'"'+line_trimmed.slice(line_trimmed.indexOf(key));
+					if(key[key.length-1] != '\"') line_trimmed = line_trimmed.slice(0, line_trimmed.indexOf(":"))+'"'+line_trimmed.slice(line_trimmed.indexOf(":"));
+					lines[i] = line_trimmed;
 				}
 			}
-			unparsed += line;
+			unparsed += line_trimmed;
 		}
 
 		/*var currentLine = lines[cursorLine-1];
@@ -131,10 +131,34 @@ window.addEventListener("load", function(){
     		else if(key == "href"){
     			parentNode.setAttribute("href", value);
     		}	
+    		else if(key == "attr"){
+    			if (typeof value === 'string' || value instanceof String){
+    				parentNode.setAttribute(value, true);
+    			}
+    			else if(value){
+    				for(var key in value){
+    					parentNode.setAttribute(key, value[key]);
+    				}
+    			}
+    		}	
     		else{
+
+    			var classList = key.split(".");
+    			key = classList[0];
+    			classList.splice(0, 1);
     			var realKey = key.indexOf('#') != -1 ? key.slice(0, key.indexOf('#')) : key;
+    			var objId = key.indexOf('#') != -1 ? key.slice(key.indexOf('#')+1) : null;
     			realKey = realKey.trim();
 	    		var node = document.createElement(realKey);
+
+	    		//name attributes
+	    		if(objId){
+	    			node.setAttribute("id", objId.trim());
+	    		}
+	    		for(var i in classList){
+	    			node.classList.add(classList[i]);	
+	    		}
+
 	    		parentNode.appendChild(node);
 
 	    		if (typeof value === 'string' || value instanceof String){
@@ -153,12 +177,52 @@ window.addEventListener("load", function(){
 		var html = '<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<meta charset="UTF-8">\n\t\t<title>'+document.title+'</title>\n\t</head>\n<body>\n';
 		html += result.innerHTML;
 		html += "\n</body>\n</html>";
-		var a = document.createElement("a");
 	    var file = new Blob([html], {type: "html"});
-	    a.href = URL.createObjectURL(file);
-	    a.download = document.title+".html";
-	    a.click();
+	    saveAs( file, document.title+".html" );
 	}
+
+	var jsonExport = function(){
+		if(!realJson) return;
+	    var file = new Blob([JSON.stringify(realJson)], {type: "json"});
+	    saveAs( file, document.title+".json" );
+	}
+
+	var jsmlExport = function(){
+		if(!textarea.value) return;
+	    var file = new Blob([textarea.value], {type: "jsml"});
+	    saveAs( file, document.title+".jsml" );
+	}
+
+	var loadSample = function(){
+	    var xhr = new XMLHttpRequest;
+	    xhr.open('GET',"sample.jsml");
+	    xhr.onload = function(){
+	    	textarea.value = this.response;
+	    	var event_kd = new CustomEvent("keydown", {});
+	    	var event_ku = new CustomEvent("keyup", {});
+	    	textarea.dispatchEvent(event_kd);
+	    	textarea.dispatchEvent(event_ku);
+	    };
+	    xhr.send()
+	}
+
+	var loadCustom = function(){
+		var input = document.createElement('input');
+        input.setAttribute("type", "file");
+        input.click(); // opening dialog
+        input.addEventListener("change", function(event){
+        	var reader = new FileReader();
+    		reader.readAsText(input.files[0], "UTF-8");
+    		reader.onload = function (evt) {
+		        textarea.value = evt.target.result;
+		        var event_kd = new CustomEvent("keydown", {});
+		    	var event_ku = new CustomEvent("keyup", {});
+		    	textarea.dispatchEvent(event_kd);
+		    	textarea.dispatchEvent(event_ku);
+		    }
+        });
+	}
+
 
 	fullscreenToggle.addEventListener("click", function(event){
 		container.classList.toggle("full");
@@ -167,5 +231,25 @@ window.addEventListener("load", function(){
 	saveHTML.addEventListener("click", function(event){
 		htmlExport();
 	});
+	document.getElementById("saveHTML2").addEventListener("click", function(event){
+		htmlExport();
+	});
+
+	document.getElementById("loadSample").addEventListener("click", function(event){
+		loadSample();
+	});
+
+	document.getElementById("saveJSON").addEventListener("click", function(event){
+		jsonExport();
+	});
+
+	document.getElementById("saveJSML").addEventListener("click", function(event){
+		jsmlExport();
+	});
+
+	document.getElementById("loadJSML").addEventListener("click", function(event){
+		loadCustom();
+	});
+	
 
 });
