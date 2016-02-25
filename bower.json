@@ -16,6 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "FileSaver": "*"
+    "FileSaver": "*",
+    "less": "^2.6.0"
   }
 }

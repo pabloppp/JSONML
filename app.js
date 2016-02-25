@@ -5,15 +5,37 @@ window.addEventListener("load", function(){
 
 	var container = document.getElementById("container")
 	var textarea = document.getElementById("json-textarea");
+	var lessTextarea = document.getElementById("less-textarea");
 	var title = document.getElementById("title");
 	var result = document.getElementById("result");
 	var errorContainer = document.getElementById("error");
 	var lineLumbers = document.getElementById("lineLumbers");
+	var lessLineLumbers = document.getElementById("lineLumbersLess");
 	var realJson;
+	var realLess;
+	var realCss;
+
+	var currentTab = "jsml";
 
 	//options
 	var fullscreenToggle = document.getElementById("fullscreenToggle");
 	var saveHTML = document.getElementById("saveHTML"); 
+
+	//tabs
+	var tabJsml = document.getElementById("tab-jsml");
+	var tabLess = document.getElementById("tab-less");
+
+	//contentBoxes
+	var textZoneJsml = document.getElementById("textZone");
+	var textZoneLess = document.getElementById("textZoneLess");
+
+	//refresh stuff
+	var refreshTa = function(ta){
+		var event_kd = new CustomEvent("keydown", {});
+    	var event_ku = new CustomEvent("keyup", {});
+    	ta.dispatchEvent(event_kd);
+    	ta.dispatchEvent(event_ku);	
+	}
 
 	textarea.addEventListener("keyup", function(event){
 		var cursorLine = textarea.value.substr(0, textarea.selectionStart).split("\n").length;
@@ -63,6 +85,8 @@ window.addEventListener("load", function(){
 			errorContainer.classList.remove("ok");
 		}
 
+		if(sessionStorage) sessionStorage.setItem("jsml", textarea.value);
+
 	});
 
 	textarea.addEventListener("keydown", function(event){
@@ -89,6 +113,49 @@ window.addEventListener("load", function(){
 			lineLumbers.innerHTML += (i+1)+"<br>";	
 		}
 		textarea.style.height = ((2+lines.length)*20)+"px";
+	});
+
+	lessTextarea.addEventListener("keydown", function(event){
+		if(event.keyCode==9 || event.which==9){
+            event.preventDefault();
+            var s = this.selectionStart;
+            this.value = this.value.substring(0,this.selectionStart) + "\t" + this.value.substring(this.selectionEnd);
+            this.selectionEnd = s+1; 
+        }
+
+        var lines = lessTextarea.value.split("\n");
+
+		lessLineLumbers.innerHTML = "";
+		for(var i = 0; i <= lines.length; i++){
+			lessLineLumbers.innerHTML += (i+1)+"<br>";	
+		}
+		lessTextarea.style.height = ((2+lines.length)*20)+"px";
+	});
+
+	lessTextarea.addEventListener("keyup", function(event){
+		less.render("#result{"+lessTextarea.value+"}", function (e, css) {
+			if(e){
+				//console.log(e);
+				errorContainer.innerHTML = "⚠ "+e.message;
+				errorContainer.classList.remove("ok");
+			}
+		    else{
+		    	realLess = lessTextarea.value;
+		    	var webCss = css.css;
+		    	var s = document.getElementById("less_style");
+				s.innerHTML = webCss;
+				errorContainer.innerHTML = "LESS seems OK!";
+				errorContainer.classList.add("ok");
+		    }
+		});
+
+		less.render(lessTextarea.value, function (e, css) {
+			if(!e){
+				realCss = css.css;
+			}
+		});
+
+		if(sessionStorage) sessionStorage.setItem("less", lessTextarea.value);
 	});
 
 	title.addEventListener("keyup", function(event){
@@ -174,11 +241,13 @@ window.addEventListener("load", function(){
 	}
 
 	var htmlExport = function(){
-		var html = '<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<meta charset="UTF-8">\n\t\t<title>'+document.title+'</title>\n\t</head>\n<body>\n';
+		var html = '<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<meta charset="UTF-8">\n\t\t<title>'+document.title+'</title>\n\t<link rel="stylesheet" type="text/css" href="'+document.title+'.css">\n\t</head>\n<body>\n';
 		html += result.innerHTML;
 		html += "\n</body>\n</html>";
 	    var file = new Blob([html], {type: "html"});
 	    saveAs( file, document.title+".html" );
+	    file = new Blob([realCss || ""], {type: "css"});
+	    saveAs( file, document.title+".css" );
 	}
 
 	var jsonExport = function(){
@@ -187,10 +256,17 @@ window.addEventListener("load", function(){
 	    saveAs( file, document.title+".json" );
 	}
 
-	var jsmlExport = function(){
-		if(!textarea.value) return;
-	    var file = new Blob([textarea.value], {type: "jsml"});
-	    saveAs( file, document.title+".jsml" );
+	var saveWork = function(all){
+		if(currentTab == "jsml" || all){
+			if(!textarea.value) return;
+		    var file = new Blob([textarea.value], {type: "jsml"});
+		    saveAs( file, document.title+".jsml" );
+		}
+		if(currentTab == "less" || all){
+			if(!lessTextarea.value) return;
+			var file = new Blob([lessTextarea.value], {type: "less"});
+		    saveAs( file, document.title+".less" );
+		}
 	}
 
 	var loadSample = function(){
@@ -198,10 +274,7 @@ window.addEventListener("load", function(){
 	    xhr.open('GET',"sample.jsml");
 	    xhr.onload = function(){
 	    	textarea.value = this.response;
-	    	var event_kd = new CustomEvent("keydown", {});
-	    	var event_ku = new CustomEvent("keyup", {});
-	    	textarea.dispatchEvent(event_kd);
-	    	textarea.dispatchEvent(event_ku);
+	    	refreshTa(textarea);
 	    };
 	    xhr.send()
 	}
@@ -211,17 +284,26 @@ window.addEventListener("load", function(){
         input.setAttribute("type", "file");
         input.click(); // opening dialog
         input.addEventListener("change", function(event){
+        	var splt = input.files[0].name.split(".");
+        	var extension = splt[splt.length-1];
         	var reader = new FileReader();
     		reader.readAsText(input.files[0], "UTF-8");
     		reader.onload = function (evt) {
-		        textarea.value = evt.target.result;
-		        var event_kd = new CustomEvent("keydown", {});
-		    	var event_ku = new CustomEvent("keyup", {});
-		    	textarea.dispatchEvent(event_kd);
-		    	textarea.dispatchEvent(event_ku);
+    			if(currentTab == "jsml" && extension == "jsml"){
+			        textarea.value = evt.target.result;
+			        refreshTa(textarea);
+			    }
+			    else if(currentTab == "less" && extension == "less"){
+			    	lessTextarea.value = evt.target.result;
+			    	refreshTa(lessTextarea);	
+			    }
+			    else{
+			    	errorContainer.innerHTML = "⚠ Wrong file extension";
+					errorContainer.classList.remove("ok");	
+			    }
 		    }
         });
-	}
+}
 
 
 	fullscreenToggle.addEventListener("click", function(event){
@@ -244,12 +326,74 @@ window.addEventListener("load", function(){
 	});
 
 	document.getElementById("saveJSML").addEventListener("click", function(event){
-		jsmlExport();
+		saveWork();
 	});
+
+	document.getElementById("saveAll").addEventListener("click", function(event){
+		saveWork(true);
+	});
+
+	document.getElementById("clearCurrent").addEventListener("click", function(event){
+		if(currentTab == "jsml"){
+	        textarea.value = "";
+	        refreshTa(textarea);
+	    }
+	    else if(currentTab == "less"){
+	    	lessTextarea.value = "";
+	    	refreshTa(lessTextarea);	
+	    }	
+	});	
+	document.getElementById("clearAll").addEventListener("click", function(event){
+		textarea.value = "";
+		lessTextarea.value = "";
+		refreshTa(textarea);
+		refreshTa(lessTextarea);	
+	});	
 
 	document.getElementById("loadJSML").addEventListener("click", function(event){
 		loadCustom();
 	});
+
+	tabJsml.addEventListener("click", function(event){
+		tabJsml.classList.add("active");	
+		tabLess.classList.remove("active");	
+		textZoneJsml.classList.remove("hidden");
+		textZoneLess.classList.add("hidden");
+		currentTab = "jsml";
+    	refreshTa(textarea);
+    	window.location.hash = '';
+	});
+
+	tabLess.addEventListener("click", function(event){
+		tabJsml.classList.remove("active");	
+		tabLess.classList.add("active");
+		textZoneJsml.classList.add("hidden");
+		textZoneLess.classList.remove("hidden");
+		currentTab = "less"	
+    	refreshTa(lessTextarea);
+    	window.location.hash = '#less';
+	});
+
+	if(window.location.hash == "#less"){
+		tabJsml.classList.remove("active");	
+		tabLess.classList.add("active");
+		textZoneJsml.classList.add("hidden");
+		textZoneLess.classList.remove("hidden");
+		currentTab = "less";
+	}
 	
+	//LOAD FROM SESSIONSTORAGE
+	if(sessionStorage){
+		var sessionJsml = sessionStorage.getItem("jsml");
+		var sessionLess = sessionStorage.getItem("less");
+		if(sessionJsml){
+			textarea.value = sessionJsml;	
+			refreshTa(textarea);
+		}
+		if(sessionLess){
+			lessTextarea.value = sessionLess;	
+			refreshTa(lessTextarea);
+		}
+	}
 
 });

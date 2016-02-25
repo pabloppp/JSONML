@@ -82,20 +82,54 @@ header.main > h1{
 	width: 100%;
 	background-color: red;
 	box-sizing: border-box;
-	padding: 5px 10px;
 	background: none;
 	position: relative;
-	border-bottom: 1px solid rgba(101, 101, 101,0.5);
 	height: 35px;
+	padding: 5px;
+	padding-bottom: 0;
+	background-color: rgba(0,0,0,0.4);
 }
 
-.container .input-json .header input{
+.container .input-json .header .tab{
+	width: calc(50% - 15px);
+	display: inline-block;
+	background: none;
+	height: 30px;
+	vertical-align: bottom;
+	box-sizing: border-box;
+	padding: 5px 10px;
+	margin: 0;
+	margin-right: -5px;
+	border-radius: 5px 5px 0 0;
+	color: rgba(255,255,255,0.2);
+	line-height: 20px;
+	transition: all 0.3s;
+	border: 1px solid transparent;
+	border-bottom: 1px solid rgba(101, 101, 101,0.5);
+	position: relative;
+	cursor: pointer;
+}
+
+.container .input-json .header .tab.active{
+	//background-color: rgba(255,255,255,0.1);
+	background-color: #101421;
+	border: 1px solid rgba(101, 101, 101,0.5);
+	border-bottom: 1px solid transparent;
+	color: rgba(255,255,255,0.9);
+}
+
+.container .input-json .header .tab span{
+	font-size: 1.2em;
+}
+
+.container .input-json .header .tab input{
 	background:none;
 	border: 0;
 	width: 100%;
 	outline: none;
 	font-size: 1.2em;
 	color: white;
+	line-height: 20px;
 }
 
 .container .input-json .textZone{
@@ -212,7 +246,7 @@ header.main > h1{
 	right: 5px;
 	top: 5px;
 	list-style: none;
-	background-color: rgba(0,0,0,0.7);
+	background-color: rgba(0,0,0,0.8);
 	color: white;
 	padding: 10px;
 	margin: 0;
@@ -220,7 +254,7 @@ header.main > h1{
 	pointer-events: none;
 	transition: all 0.3s;
 	opacity: 0;
-	box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+	box-shadow: 0 3px 9px rgba(0,0,0,0.4);
 	border: 1px solid rgba(255,255,255,0.2);
 }
 
@@ -238,4 +272,14 @@ header.main > h1{
 
 .option-menu .option-list li:hover{
 	background-color: rgba(255,255,255,0.1);
+}
+
+.option-menu .option-list li.break{
+	padding: 0px 10px;
+	background: none;
+	opacity: 0.2;
+}
+
+.hidden{
+	display: none;
 }
