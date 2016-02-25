@@ -350,6 +350,10 @@ window.addEventListener("load", function(){
 		lessTextarea.value = "";
 		refreshTa(textarea);
 		refreshTa(lessTextarea);	
+
+		title.value = "";
+		document.title = "JsonML";
+		if(sessionStorage) sessionStorage.setItem("appName", document.title);
 	});	
 
 	document.getElementById("loadJSML").addEventListener("click", function(event){
