@@ -160,6 +160,7 @@ window.addEventListener("load", function(){
 
 	title.addEventListener("keyup", function(event){
 		document.title = title.value || "JsonML";
+		if(sessionStorage) sessionStorage.setItem("appName", document.title);
 	});
 
 	var jsonToHTML = function(json, parentNode){
@@ -387,6 +388,7 @@ window.addEventListener("load", function(){
 	if(sessionStorage){
 		var sessionJsml = sessionStorage.getItem("jsml");
 		var sessionLess = sessionStorage.getItem("less");
+		var sessionAppName = sessionStorage.getItem("appName");
 		if(sessionJsml){
 			textarea.value = sessionJsml;	
 			refreshTa(textarea);
@@ -394,6 +396,9 @@ window.addEventListener("load", function(){
 		if(sessionLess){
 			lessTextarea.value = sessionLess;	
 			refreshTa(lessTextarea);
+		}
+		if(sessionAppName){
+			document.title = sessionAppName;
 		}
 	}
 
