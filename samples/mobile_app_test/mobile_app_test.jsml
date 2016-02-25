@@ -1,0 +1,17 @@
+"div#main":{
+
+	"header":{
+		"h1":"test app",
+		"button#menu":{
+			content:"MENU"
+		}
+	},
+
+	"div#content":{
+		"ul#list1.list":{
+			"li#1":"item1",
+			"li#2":"item2"
+		}	
+	}
+
+}
