@@ -133,7 +133,7 @@ window.addEventListener("load", function(){
 	});
 
 	lessTextarea.addEventListener("keyup", function(event){
-		less.render("#result{"+lessTextarea.value+"}", function (e, css) {
+		less.render(".result-html{"+lessTextarea.value+"}", function (e, css) {
 			if(e){
 				//console.log(e);
 				errorContainer.innerHTML = "⚠ "+e.message;
@@ -242,7 +242,7 @@ window.addEventListener("load", function(){
 	}
 
 	var htmlExport = function(){
-		var html = '<!DOCTYPE html>\n<html lang="en" style="margin:0; padding:0">\n\t<head>\n\t\t<meta charset="UTF-8">\n\t\t<title>'+document.title+'</title>\n\t<link rel="stylesheet" type="text/css" href="'+document.title+'.css">\n\t</head>\n<body style="margin:0; padding:0">\n';
+		var html = '<!DOCTYPE html>\n<html lang="en" style="margin:0; padding:0">\n\t<head>\n\t\t<meta charset="UTF-8">\n\t\t<title>'+document.title+'</title>\n\t<link rel="stylesheet" type="text/css" href="'+document.title+'.css">\n\t</head>\n<body style="margin:0; padding:0" class="body">\n';
 		html += result.innerHTML;
 		html += "\n</body>\n</html>";
 	    var file = new Blob([html], {type: "html"});
