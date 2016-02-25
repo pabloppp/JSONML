@@ -160,7 +160,7 @@ window.addEventListener("load", function(){
 
 	title.addEventListener("keyup", function(event){
 		document.title = title.value || "JsonML";
-		if(sessionStorage) sessionStorage.setItem("appName", document.title);
+		if(sessionStorage) sessionStorage.setItem("appName", title.value || "");
 	});
 
 	var jsonToHTML = function(json, parentNode){

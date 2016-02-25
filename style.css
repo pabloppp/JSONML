@@ -122,10 +122,14 @@ header.main > h1{
 	font-size: 1.2em;
 }
 
+.container .input-json .header .tab span.trans{
+	opacity: 0.2;
+}
+
 .container .input-json .header .tab input{
 	background:none;
 	border: 0;
-	width: 100%;
+	width: calc(100% - 50px);
 	outline: none;
 	font-size: 1.2em;
 	color: white;
