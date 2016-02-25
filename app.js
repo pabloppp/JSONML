@@ -241,7 +241,7 @@ window.addEventListener("load", function(){
 	}
 
 	var htmlExport = function(){
-		var html = '<!DOCTYPE html>\n<html lang="en">\n\t<head>\n\t\t<meta charset="UTF-8">\n\t\t<title>'+document.title+'</title>\n\t<link rel="stylesheet" type="text/css" href="'+document.title+'.css">\n\t</head>\n<body>\n';
+		var html = '<!DOCTYPE html>\n<html lang="en" style="margin:0; padding:0">\n\t<head>\n\t\t<meta charset="UTF-8">\n\t\t<title>'+document.title+'</title>\n\t<link rel="stylesheet" type="text/css" href="'+document.title+'.css">\n\t</head>\n<body style="margin:0; padding:0">\n';
 		html += result.innerHTML;
 		html += "\n</body>\n</html>";
 	    var file = new Blob([html], {type: "html"});
@@ -313,7 +313,7 @@ window.addEventListener("load", function(){
 	/*saveHTML.addEventListener("click", function(event){
 		htmlExport();
 	});*/
-	
+
 	document.getElementById("saveHTML2").addEventListener("click", function(event){
 		htmlExport();
 	});
