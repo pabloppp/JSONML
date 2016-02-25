@@ -19,7 +19,7 @@ window.addEventListener("load", function(){
 
 	//options
 	var fullscreenToggle = document.getElementById("fullscreenToggle");
-	var saveHTML = document.getElementById("saveHTML"); 
+	//var saveHTML = document.getElementById("saveHTML"); 
 
 	//tabs
 	var tabJsml = document.getElementById("tab-jsml");
@@ -310,9 +310,10 @@ window.addEventListener("load", function(){
 		container.classList.toggle("full");
 	});
 
-	saveHTML.addEventListener("click", function(event){
+	/*saveHTML.addEventListener("click", function(event){
 		htmlExport();
-	});
+	});*/
+	
 	document.getElementById("saveHTML2").addEventListener("click", function(event){
 		htmlExport();
 	});
