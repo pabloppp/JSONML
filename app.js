@@ -402,6 +402,7 @@ window.addEventListener("load", function(){
 			refreshTa(lessTextarea);
 		}
 		if(sessionAppName){
+			title.value = sessionAppName;
 			document.title = sessionAppName;
 		}
 	}
